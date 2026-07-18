@@ -24,10 +24,10 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Code2, href: "#", label: "GitHub" },
+  { icon: Code2, href: "https://github.com/unixdev38", label: "GitHub" },
   { icon: Briefcase, href: "#", label: "LinkedIn" },
-  { icon: MessageCircle, href: "#", label: "Twitter" },
-  { icon: Mail, href: "mailto:contact@unixdev.com", label: "Email" },
+  { icon: MessageCircle, href: "https://wa.me/22658497477", label: "WhatsApp" },
+  { icon: Mail, href: "mailto:unixdev38@gmail.com", label: "Email" },
 ];
 
 export default function Footer() {
@@ -60,11 +60,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3 text-gray-400 text-sm">
                 <Phone size={16} className="text-red-500 shrink-0" />
-                <span>+225 00 00 00 00 00</span>
+                <a href="https://wa.me/22658497477" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors">+226 58 49 74 77</a>
               </div>
               <div className="flex items-center gap-3 text-gray-400 text-sm">
                 <Mail size={16} className="text-red-500 shrink-0" />
-                <span>contact@unixdev.com</span>
+                <a href="mailto:unixdev38@gmail.com" className="hover:text-red-400 transition-colors">unixdev38@gmail.com</a>
               </div>
             </div>
 

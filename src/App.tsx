@@ -1,6 +1,7 @@
 import Navbar from "./components/navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
+import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
             </div>
           </div>
         </section>
+        {/* Section Contact */}
+        <ContactSection />
       </main>
 
       <Footer />
