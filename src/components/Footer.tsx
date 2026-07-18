@@ -56,7 +56,7 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-gray-400 text-sm">
                 <MapPin size={16} className="text-red-500 shrink-0" />
-                <span>Abidjan, Côte d'Ivoire</span>
+                <span>Ouagadougou, Burkina Faso</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400 text-sm">
                 <Phone size={16} className="text-red-500 shrink-0" />
