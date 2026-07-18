@@ -1,44 +1,43 @@
-import { Code, Network, ShieldCheck, Smartphone, Database, Cloud } from "lucide-react";
 import Card from "./card";
 
 const services = [
   {
-    icon: <Code size={32} strokeWidth={1.5} color="#fb2c36" />,
+    image: "/images/services/web.jpg",
     title: "Développement Web",
     paragraph:
       "Sites vitrines, applications web progressives (PWA), plateformes e-commerce et portails sur-mesure avec les technologies les plus modernes.",
     color: "red",
   },
   {
-    icon: <Smartphone size={32} strokeWidth={1.5} color="#3b82f6" />,
+    image: "/images/services/mobile.jpg",
     title: "Applications Mobiles",
     paragraph:
       "Applications iOS et Android natives ou cross-platform, de la conception UX/UI au déploiement sur les stores.",
     color: "blue",
   },
   {
-    icon: <Network size={32} strokeWidth={1.5} color="#a855f7" />,
+    image: "/images/services/network.jpg",
     title: "Réseaux & Infrastructure",
     paragraph:
       "Architecture réseau, déploiement d'infrastructure, VPN, cloud computing et solutions de connectivité sécurisées.",
     color: "purple",
   },
   {
-    icon: <ShieldCheck size={32} strokeWidth={1.5} color="#22c55e" />,
+    image: "/images/services/security.jpg",
     title: "Cybersécurité",
     paragraph:
       "Audit de sécurité, tests d'intrusion, mise en conformité RGPD, protection des données et solutions de sécurisation avancées.",
     color: "green",
   },
   {
-    icon: <Database size={32} strokeWidth={1.5} color="#fb2c36" />,
+    image: "/images/services/embedded.jpg",
     title: "Logiciels Embarqués",
     paragraph:
       "Développement de firmware, systèmes temps réel, IoT et solutions logicielles pour dispositifs embarqués industriels.",
     color: "red",
   },
   {
-    icon: <Cloud size={32} strokeWidth={1.5} color="#3b82f6" />,
+    image: "/images/services/cloud.jpg",
     title: "Cloud & DevOps",
     paragraph:
       "Migration cloud, CI/CD, conteneurisation Docker/Kubernetes, automatisation et gestion d'infrastructure as code.",
@@ -77,7 +76,7 @@ export default function Services() {
           {services.map((service) => (
             <Card
               key={service.title}
-              icon={service.icon}
+              image={service.image}
               title={service.title}
               paragraph={service.paragraph}
               color={service.color as "red" | "blue" | "purple" | "green"}
