@@ -47,36 +47,38 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative py-24 overflow-hidden">
+    <section id="contact" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
       {/* Fond décoratif */}
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-950/5 to-transparent" />
-      <div className="absolute top-1/4 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse-soft" />
-      <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-soft" />
+
+      {/* Blobs décoratifs - cachés sur mobile pour éviter les débordements */}
+      <div className="absolute top-1/4 -left-20 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse-soft hidden sm:block" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-soft hidden sm:block" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
-        <div className="text-center space-y-4 mb-16">
-          <span className="inline-block glass rounded-full px-4 py-1.5 text-xs font-medium text-gray-300 tracking-wide">
+        <div className="text-center space-y-3 sm:space-y-4 mb-10 sm:mb-12 lg:mb-16">
+          <span className="inline-block glass rounded-full px-3 sm:px-4 py-1.5 text-xs font-medium text-gray-300 tracking-wide">
             CONTACT
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white px-2">
             Parlons de votre{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-red-500">
               projet
             </span>
           </h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
+          <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto px-2">
             Vous avez un projet en tête ? Une idée à concrétiser ?
             N'hésitez pas à me contacter. Je suis disponible pour échanger
             sur vos besoins.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
           {/* --- INFOS DE CONTACT RAPIDE --- */}
-          <div className="space-y-8">
-            <div className="glass rounded-2xl p-8 space-y-6">
-              <h3 className="text-xl font-semibold text-white">
+          <div className="space-y-6 sm:space-y-8">
+            <div className="glass rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">
                 Contactez-moi directement
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed">
@@ -89,16 +91,16 @@ export default function ContactSection() {
                 href="https://wa.me/22658497477"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-green-500/10 border border-white/10 hover:border-green-500/30 transition-all duration-300 group"
+                className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/5 hover:bg-green-500/10 border border-white/10 hover:border-green-500/30 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Phone size={22} className="text-green-400" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Phone size={20} className="text-green-400 sm:w-[22px] sm:h-[22px]" />
                 </div>
-                <div>
-                  <p className="text-white font-medium">WhatsApp</p>
-                  <p className="text-gray-400 text-sm">+226 58 49 74 77</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white font-medium text-sm sm:text-base">WhatsApp</p>
+                  <p className="text-gray-400 text-xs sm:text-sm truncate">+226 58 49 74 77</p>
                 </div>
-                <span className="ml-auto text-xs text-green-400 bg-green-500/10 px-3 py-1 rounded-full">
+                <span className="hidden sm:inline ml-auto text-xs text-green-400 bg-green-500/10 px-2 sm:px-3 py-1 rounded-full shrink-0">
                   Disponible
                 </span>
               </a>
@@ -106,58 +108,58 @@ export default function ContactSection() {
               {/* Email */}
               <a
                 href="mailto:unixdev38@gmail.com"
-                className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 transition-all duration-300 group"
+                className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/5 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Mail size={22} className="text-blue-400" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Mail size={20} className="text-blue-400 sm:w-[22px] sm:h-[22px]" />
                 </div>
-                <div>
-                  <p className="text-white font-medium">Email</p>
-                  <p className="text-gray-400 text-sm">unixdev38@gmail.com</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white font-medium text-sm sm:text-base">Email</p>
+                  <p className="text-gray-400 text-xs sm:text-sm truncate">unixdev38@gmail.com</p>
                 </div>
-                <span className="ml-auto text-xs text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
+                <span className="hidden sm:inline ml-auto text-xs text-blue-400 bg-blue-500/10 px-2 sm:px-3 py-1 rounded-full shrink-0">
                   Envoyer
                 </span>
               </a>
             </div>
 
             {/* Carte d'information supplémentaire */}
-            <div className="glass rounded-2xl p-8 text-center space-y-4">
-              <p className="text-gray-400 text-sm">
+            <div className="glass rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8 text-center space-y-3 sm:space-y-4">
+              <p className="text-gray-400 text-xs sm:text-sm">
                 Je réponds généralement sous{" "}
                 <span className="text-white font-medium">24 à 48 heures</span>
               </p>
-              <div className="flex justify-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <div className="flex justify-center items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0" />
                 <span className="text-xs text-gray-500">Disponible pour de nouveaux projets</span>
               </div>
             </div>
           </div>
 
           {/* --- FORMULAIRE DE CONTACT --- */}
-          <div className="glass rounded-2xl p-8">
+          <div className="glass rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8">
             {submitted ? (
-              <div className="flex flex-col items-center justify-center py-16 space-y-4 text-center">
-                <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <Check size={32} className="text-green-400" />
+              <div className="flex flex-col items-center justify-center py-10 sm:py-16 space-y-4 text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <Check size={28} className="text-green-400 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-lg sm:text-xl font-semibold text-white">
                   Message envoyé !
                 </h3>
-                <p className="text-gray-400 text-sm max-w-sm">
+                <p className="text-gray-400 text-sm max-w-sm px-2">
                   Merci pour votre message. Je vous répondrai dans les plus
                   brefs délais.
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <h3 className="text-xl font-semibold text-white mb-2">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 sm:mb-2">
                   Envoyez-moi un message
                 </h3>
 
                 {/* Nom */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-1.5">
                     Nom complet
                   </label>
                   <input
@@ -168,7 +170,7 @@ export default function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Votre nom"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm
                       placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1
                       focus:ring-red-500/20 transition-all duration-200"
                   />
@@ -176,7 +178,7 @@ export default function ContactSection() {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-1.5">
                     Email
                   </label>
                   <input
@@ -187,7 +189,7 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="votre@email.com"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm
                       placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1
                       focus:ring-red-500/20 transition-all duration-200"
                   />
@@ -195,7 +197,7 @@ export default function ContactSection() {
 
                 {/* Sujet */}
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  <label htmlFor="subject" className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-1.5">
                     Sujet
                   </label>
                   <select
@@ -204,11 +206,12 @@ export default function ContactSection() {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm
                       focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20
-                      transition-all duration-200"
+                      transition-all duration-200 appearance-none
+                      bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20d%3D%22M4.5%206.5L8%2010l3.5-3.5%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_0.75rem_center] pr-10"
                   >
-                    <option value="" disabled className="bg-[#0a0a1a]">
+                    <option value="" disabled className="bg-[#0a0a1a] text-gray-400">
                       Choisissez un sujet
                     </option>
                     <option value="Developpement Web" className="bg-[#0a0a1a]">
@@ -234,18 +237,18 @@ export default function ContactSection() {
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  <label htmlFor="message" className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-1.5">
                     Message
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     required
-                    rows={5}
+                    rows={4}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Décrivez votre projet ou votre besoin..."
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm
                       placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1
                       focus:ring-red-500/20 transition-all duration-200 resize-none"
                   />
@@ -256,7 +259,7 @@ export default function ContactSection() {
                   type="submit"
                   disabled={loading}
                   className="w-full btn bg-linear-to-r from-blue-500 to-red-500 hover:from-blue-600
-                    hover:to-red-600 text-white border-none rounded-xl py-3 h-auto font-medium
+                    hover:to-red-600 text-white border-none rounded-xl py-2.5 sm:py-3 h-auto font-medium text-sm sm:text-base
                     transition-all duration-200 hover:shadow-lg hover:shadow-red-500/25
                     disabled:opacity-60 disabled:cursor-not-allowed"
                 >
