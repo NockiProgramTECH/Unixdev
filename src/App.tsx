@@ -2,6 +2,7 @@ import Navbar from "./components/navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import ContactSection from "./components/ContactSection";
+import Boutique from "./components/Boutique";
 import Footer from "./components/Footer";
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
             <div className="w-16 h-1 bg-linear-to-r from-blue-500 to-red-500 rounded-full mx-auto" />
           </div>
         </section>
+
+        <Boutique />
 
         {/* Section À propos (placeholder) */}
         <section id="apropos" className="relative py-24 overflow-hidden">
