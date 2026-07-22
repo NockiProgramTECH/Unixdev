@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ShoppingBag, Shield, Download, BookOpen, ChevronRight } from "lucide-react";
 
 const product = {
@@ -21,6 +22,22 @@ const product = {
 };
 
 export default function Boutique() {
+  // Charger le widget Charriow APRES que le rendu React soit fait
+  useEffect(() => {
+    // Éviter de charger le script plusieurs fois
+    if (document.querySelector('script[src*="chariowcdn"]')) return;
+
+    const script = document.createElement("script");
+    script.src = "https://js.chariowcdn.com/v1/widget.min.js";
+    script.async = true;
+    document.head.appendChild(script);
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://js.chariowcdn.com/v1/widget.min.css";
+    document.head.appendChild(link);
+  }, []);
+
   return (
     <section id="boutique" className="relative py-24 overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-red-950/5 to-transparent" />
