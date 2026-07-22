@@ -11,6 +11,9 @@ import {
   AlertCircle,
   Package,
   Eye,
+  X,
+  Save,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function Admin() {
@@ -22,6 +25,18 @@ export default function Admin() {
   const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
 
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+  const [form, setForm] = useState({
+    title: "",
+    slug: "",
+    category: "",
+    description: "",
+    price: "",
+  });
+
   // Simple admin check via environment variable
   useEffect(() => {
     async function checkAdmin() {
@@ -31,7 +46,6 @@ export default function Admin() {
           navigate("/auth");
           return;
         }
-        // Check if user's email matches admin email
         const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
         if (adminEmail && user.email === adminEmail) {
           setIsAdmin(true);
@@ -75,7 +89,7 @@ export default function Admin() {
       const { error } = await supabase.from("projects").delete().eq("id", id);
       if (error) throw error;
       setProjects((prev) => prev.filter((p) => p.id !== id));
-    } catch (err: unknown) {
+    } catch {
       alert("Erreur lors de la suppression");
     }
   };
@@ -83,6 +97,59 @@ export default function Admin() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
+  };
+
+  // Générer un slug à partir du titre
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .trim();
+  };
+
+  const handleTitleChange = (title: string) => {
+    setForm((prev) => ({
+      ...prev,
+      title,
+      slug: generateSlug(title),
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title || !form.price) {
+      alert("Le titre et le prix sont obligatoires.");
+      return;
+    }
+
+    setSaving(true);
+    setSaveSuccess(null);
+
+    try {
+      const { error } = await supabase.from("projects").insert({
+        title: form.title,
+        slug: form.slug || generateSlug(form.title),
+        category: form.category || null,
+        description: form.description || null,
+        price: parseInt(form.price, 10),
+      });
+
+      if (error) throw error;
+
+      setSaveSuccess(`Projet "${form.title}" créé avec succès !`);
+      setForm({ title: "", slug: "", category: "", description: "", price: "" });
+      setShowModal(false);
+      loadData(); // Recharger la liste
+
+      setTimeout(() => setSaveSuccess(null), 4000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      alert(`Erreur : ${message}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Access denied or checking
@@ -142,6 +209,14 @@ export default function Admin() {
           </div>
         )}
 
+        {/* Success notification */}
+        {saveSuccess && (
+          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 mb-6 flex items-center gap-2">
+            <CheckCircle2 size={18} className="text-green-400 shrink-0" />
+            <p className="text-green-400 text-sm">{saveSuccess}</p>
+          </div>
+        )}
+
         {/* Projects Management */}
         <div className="glass rounded-2xl p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -149,7 +224,13 @@ export default function Admin() {
               <Package size={20} className="text-red-500" />
               Projets ({projects.length})
             </h2>
-            <button className="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-none rounded-full">
+            <button
+              onClick={() => {
+                setForm({ title: "", slug: "", category: "", description: "", price: "" });
+                setShowModal(true);
+              }}
+              className="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-none rounded-full"
+            >
               <Plus size={16} />
               Nouveau projet
             </button>
@@ -183,9 +264,7 @@ export default function Admin() {
                       <td className="py-3 px-2 text-right text-white font-medium">
                         {project.price.toLocaleString()} FCFA
                       </td>
-                      <td className="py-3 px-2 text-center text-gray-400 hidden md:table-cell">
-                        —
-                      </td>
+                      <td className="py-3 px-2 text-center text-gray-400 hidden md:table-cell">—</td>
                       <td className="py-3 px-2">
                         <div className="flex items-center justify-end gap-2">
                           <Link
@@ -236,7 +315,7 @@ export default function Admin() {
                 <tbody>
                   {orders.map((order) => (
                     <tr key={order.id} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="py-3 px-2 text-gray-300">{order.user_id.slice(0, 8)}...</td>
+                      <td className="py-3 px-2 text-gray-300">{(order.user_id ?? "N/A").slice(0, 8)}...</td>
                       <td className="py-3 px-2 text-gray-400 hidden sm:table-cell">
                         {order.project?.title || "—"}
                       </td>
@@ -265,6 +344,127 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      {/* Modal : Nouveau projet */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowModal(false)}
+          />
+          {/* Modal content */}
+          <div className="relative w-full max-w-lg bg-[#0f0f23] border border-white/10 rounded-2xl shadow-2xl p-6 animate-fade-up">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">Nouveau projet</h3>
+              <button
+                onClick={() => setShowModal(false)}
+                className="btn btn-ghost btn-sm btn-square text-gray-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Titre */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Titre <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-colors"
+                  placeholder="Ex: Formation Pentest Complet"
+                  required
+                />
+              </div>
+
+              {/* Slug (auto-généré) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Slug</label>
+                <input
+                  type="text"
+                  value={form.slug}
+                  onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-colors font-mono text-sm"
+                  placeholder="formation-pentest-complet"
+                />
+                <p className="text-xs text-gray-500 mt-1">Généré automatiquement à partir du titre</p>
+              </div>
+
+              {/* Catégorie */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Catégorie</label>
+                <input
+                  type="text"
+                  value={form.category}
+                  onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-colors"
+                  placeholder="Ex: Cybersécurité, Formation"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                <textarea
+                  value={form.description}
+                  onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+                  rows={3}
+                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-colors resize-none"
+                  placeholder="Description du projet..."
+                />
+              </div>
+
+              {/* Prix */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Prix (FCFA) <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={form.price}
+                  onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-colors"
+                  placeholder="Ex: 5000"
+                  min="0"
+                  required
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="btn btn-sm glass text-gray-300 hover:text-white border-none rounded-full"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn btn-sm bg-red-500 hover:bg-red-600 disabled:bg-red-500/50 text-white border-none rounded-full flex items-center gap-2"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      Enregistrement...
+                    </>
+                  ) : (
+                    <>
+                      <Save size={14} />
+                      Enregistrer
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

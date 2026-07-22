@@ -7,6 +7,14 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss()
-
   ],
+  server: {
+    // Proxy pour les API routes (comme en production sur Vercel)
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 })

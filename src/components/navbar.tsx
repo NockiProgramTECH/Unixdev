@@ -1,28 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { supabase } from "../lib/supabase";
 
 const navLinks = [
   { label: "Accueil", href: "/", active: true },
   { label: "Services", href: "/#services" },
-  { label: "Boutique", href: "/projects" },
+  { label: "Boutique", href: "/boutique" },
   { label: "À propos", href: "/#apropos" },
   { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const location = useLocation();
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => listener?.subscription.unsubscribe();
-  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -66,30 +56,15 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
-            {/* Auth / Dashboard links */}
-            {user ? (
-              <li>
-                <Link
-                  to="/dashboard"
-                  className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
-                    isActive("/dashboard") ? "text-red-500" : "text-gray-300 hover:text-white"
-                  }`}
-                >
-                  Mon espace
-                </Link>
-              </li>
-            ) : (
-              <li>
-                <Link
-                  to="/auth"
-                  className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
-                    isActive("/auth") ? "text-red-500" : "text-gray-300 hover:text-white"
-                  }`}
-                >
-                  Connexion
-                </Link>
-              </li>
-            )}
+            {/* Admin link */}
+            <li>
+              <Link
+                to="/auth"
+                className="text-sm font-medium tracking-wide text-gray-300 hover:text-red-400 transition-colors duration-200"
+              >
+                Admin
+              </Link>
+            </li>
           </ul>
 
           {/* Desktop CTA */}
@@ -131,28 +106,16 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
-              {/* Mobile auth */}
-              {user ? (
-                <li>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Mon espace
-                  </Link>
-                </li>
-              ) : (
-                <li>
-                  <Link
-                    to="/auth"
-                    className="block px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Connexion
-                  </Link>
-                </li>
-              )}
+              {/* Mobile admin link */}
+              <li>
+                <Link
+                  to="/auth"
+                  className="block px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Admin
+                </Link>
+              </li>
               <li className="px-4 pt-2">
                 <Link
                   to="/#contact"

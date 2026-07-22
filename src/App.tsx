@@ -5,8 +5,9 @@ import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import Admin from "./pages/Admin";
+import Boutique from "./pages/Boutique";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/boutique" element={<Boutique />} />
+            <Route path="/paiement/succes" element={<PaymentSuccess />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
