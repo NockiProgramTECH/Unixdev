@@ -1,16 +1,15 @@
 const CHARRIOW_API = 'https://api.chariow.com/v1';
 
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(req) {
   try {
     const apiKey = process.env.CHARRIOW_API_KEY;
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'Clé API Charriow non configurée' }), {
+      return new Response(JSON.stringify({ error: 'Cle API Charriow non configuree' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // Récupérer tous les produits publiés
     const response = await fetch(`${CHARRIOW_API}/products?per_page=50`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -21,22 +20,18 @@ export default async function handler(req: Request): Promise<Response> {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Charriow API error:', response.status, errorText);
-      return new Response(JSON.stringify({
-        error: `Erreur API Charriow: ${response.status}`,
-      }), {
+      return new Response(JSON.stringify({ error: `Erreur API: ${response.status}` }), {
         status: response.status,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     const json = await response.json();
-    // L'API retourne { data: [product1, product2, ...] }
     const products = json.data ?? [];
 
-    // Filtrer seulement les produits publiés et retourner les infos utiles
     const formatted = products
-      .filter((p: any) => p.status === 'published')
-      .map((p: any) => ({
+      .filter((p) => p.status === 'published')
+      .map((p) => ({
         id: p.id,
         name: p.name,
         description: p.description,
@@ -52,7 +47,7 @@ export default async function handler(req: Request): Promise<Response> {
       },
     });
 
-  } catch (err: unknown) {
+  } catch (err) {
     const message = err instanceof Error ? err.message : 'Erreur inconnue';
     console.error('Charriow products error:', message);
     return new Response(JSON.stringify({ error: message }), {
