@@ -1,7 +1,6 @@
 const CHARRIOW_API = 'https://api.chariow.com/v1';
 
-module.exports = async (req, res) => {
-  // CORS headers
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -27,7 +26,6 @@ module.exports = async (req, res) => {
 
     if (!response.ok) {
       const text = await response.text();
-      console.error('Charriow error:', response.status, text);
       res.status(response.status).json({ error: `Erreur Charriow: ${response.status}` });
       return;
     }
@@ -47,7 +45,6 @@ module.exports = async (req, res) => {
     res.json({ products });
 
   } catch (err) {
-    console.error('Charriow error:', err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message ?? 'Erreur inconnue' });
   }
-};
+}

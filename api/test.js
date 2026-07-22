@@ -1,4 +1,4 @@
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.json({
     ok: true,
@@ -6,4 +6,4 @@ module.exports = async (req, res) => {
     env_key_length: process.env.CHARRIOW_API_KEY ? process.env.CHARRIOW_API_KEY.length : 0,
     node_version: process.version,
   });
-};
+}
