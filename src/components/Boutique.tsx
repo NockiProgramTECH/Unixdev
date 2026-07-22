@@ -1,30 +1,42 @@
-import { useEffect } from "react";
-import { ShoppingBag, Shield, Download, BookOpen, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  ShoppingBag, Shield, Download, BookOpen,
+  ChevronRight, Loader2, AlertCircle
+} from "lucide-react";
 
-const product = {
-  id: "prd_ivlbtaux",
-  name: "Formation Complète en Test d'Intrusion",
-  subtitle: "40 modules · 7 niveaux · Débutant à Avancé",
-  price: "F CFA 4,000",
-  originalPrice: "5,000",
-  description:
-    "Une formation progressive et pratique pour apprendre le pentest de zéro. Linux, réseaux, exploitation web, Active Directory, rapport professionnel.",
-  features: [
-    "40 fichiers de cours détaillés (.md)",
-    "Laboratoires pratiques sur Metasploitable 2",
-    "Exercices corrigés et évaluations",
-    "Guide d'installation complet inclus",
-    "Méthodologie professionnelle (PTES, OWASP)",
-    "Scénario de bout en bout",
-  ],
-  image:
-    "https://images.chariowcdn.com/cdn-cgi/image/format=auto,onerror=redirect,quality=medium-high,slow-connection-quality=50/https://assets.chariowcdn.com/assets/store_2pa0brkrts5j/cUuQzPL8g0TD1NaNs2tNXhoxdx8OnA14sNafqUEF.png",
-};
+interface Produit {
+  id: string;
+  name: string;
+  description: string;
+  pictures: { cover?: string; thumbnail?: string };
+  price: {
+    value: number;
+    formatted: string;
+    short: string;
+  };
+}
+
+interface ApiResponse {
+  products: Produit[];
+  error?: string;
+}
+
+const features = [
+  "Fichiers de cours détaillés (.md)",
+  "Laboratoires pratiques inclus",
+  "Exercices corrigés et évaluations",
+  "Guide d'installation complet",
+  "Méthodologie professionnelle",
+  "Scénario de bout en bout",
+];
 
 export default function Boutique() {
+  const [products, setProducts] = useState<Produit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   // Charger le widget Charriow APRES que le rendu React soit fait
   useEffect(() => {
-    // Éviter de charger le script plusieurs fois
     if (document.querySelector('script[src*="chariowcdn"]')) return;
 
     const script = document.createElement("script");
@@ -36,6 +48,24 @@ export default function Boutique() {
     link.rel = "stylesheet";
     link.href = "https://js.chariowcdn.com/v1/widget.min.css";
     document.head.appendChild(link);
+  }, []);
+
+  // Charger les produits depuis l'API Charriow
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/charriow-products");
+        if (!res.ok) throw new Error(`Erreur: ${res.status}`);
+        const data: ApiResponse = await res.json();
+        if (data.error) throw new Error(data.error);
+        setProducts(data.products ?? []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
   }, []);
 
   return (
@@ -58,100 +88,136 @@ export default function Boutique() {
           </p>
         </div>
 
-        {/* Product Card */}
-        <div className="max-w-4xl mx-auto rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-500/10 to-orange-500/10 backdrop-blur-sm overflow-hidden">
-          <div className="grid md:grid-cols-2 gap-0">
-            {/* Image */}
-            <div className="p-6 md:p-8 flex items-center">
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-white/10 bg-gray-900">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
-            {/* Infos */}
-            <div className="p-6 md:p-8">
-              <span className="inline-block px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full mb-4">
-                POPULAIRE
-              </span>
-
-              <h3 className="text-2xl font-bold text-white mb-2">
-                {product.name}
-              </h3>
-              <p className="text-red-400 text-sm font-medium mb-4">
-                {product.subtitle}
-              </p>
-
-              {/* Prix */}
-              <div className="mb-4">
-                <span className="text-3xl font-bold text-white">
-                  {product.price}
-                </span>
-                <span className="text-gray-500 line-through text-sm ml-2">
-                  {product.originalPrice} FCFA
-                </span>
-              </div>
-
-              <p className="text-gray-400 text-sm mb-6">{product.description}</p>
-
-              {/* Features */}
-              <div className="grid gap-2 mb-8">
-                {product.features.map((feature, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <ChevronRight className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                    <span className="text-gray-300 text-sm">{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Charriow Widget */}
-              <div className="border-t border-white/10 pt-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-4 h-4 text-green-400" />
-                  <span className="text-green-400 text-sm font-medium">
-                    Paiement sécurisé
-                  </span>
-                </div>
-
-                <div
-                  id="chariow-widget"
-                  data-product-id={product.id}
-                  data-store-domain="camfbzgd.mychariow.co"
-                  data-style="button"
-                  data-border-style="rounded"
-                  data-cta-width="xs"
-                  data-background-color="#ffcc00"
-                  data-cta-animation="shine"
-                  data-locale="fr"
-                  data-primary-color="#ffcc00"
-                ></div>
-              </div>
-            </div>
+        {/* Loading */}
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-6 h-6 text-red-400 animate-spin" />
+            <span className="ml-3 text-gray-400">Chargement des produits...</span>
           </div>
-        </div>
+        )}
+
+        {/* Error */}
+        {error && !loading && (
+          <div className="max-w-xl mx-auto p-6 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
+            <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
+            <p className="text-red-400 text-sm font-medium mb-1">Erreur de chargement</p>
+            <p className="text-gray-500 text-xs">{error}</p>
+          </div>
+        )}
+
+        {/* Produits vides */}
+        {!loading && !error && products.length === 0 && (
+          <div className="text-center py-20">
+            <ShoppingBag className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500">Aucun produit disponible pour le moment.</p>
+          </div>
+        )}
+
+        {/* Grille de produits */}
+        {!loading && !error && products.length > 0 && (
+          <div className="grid gap-8">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-500/10 to-orange-500/10 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="grid md:grid-cols-2 gap-0">
+                  {/* Image */}
+                  <div className="p-6 md:p-8 flex items-center">
+                    {product.pictures?.cover ? (
+                      <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-white/10 bg-gray-900">
+                        <img
+                          src={product.pictures.cover}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-[16/9] rounded-xl bg-gray-900 border border-white/10 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-gray-600" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Infos */}
+                  <div className="p-6 md:p-8">
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {product.name}
+                    </h3>
+
+                    {/* Prix */}
+                    {product.price && (
+                      <div className="mb-4">
+                        <span className="text-3xl font-bold text-white">
+                          {product.price.formatted}
+                        </span>
+                      </div>
+                    )}
+
+                    <p className="text-gray-400 text-sm mb-6 line-clamp-3">
+                      {product.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "Formation complète"}
+                    </p>
+
+                    {/* Features */}
+                    <div className="grid gap-2 mb-8">
+                      {features.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <ChevronRight className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                          <span className="text-gray-300 text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Widget Charriow */}
+                    <div className="border-t border-white/10 pt-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Shield className="w-4 h-4 text-green-400" />
+                        <span className="text-green-400 text-sm font-medium">
+                          Paiement sécurisé
+                        </span>
+                      </div>
+
+                      <div
+                        id={`chariow-widget-${product.id}`}
+                        data-product-id={product.id}
+                        data-store-domain="camfbzgd.mychariow.co"
+                        data-style="button"
+                        data-border-style="rounded"
+                        data-cta-width="xs"
+                        data-background-color="#ffcc00"
+                        data-cta-animation="shine"
+                        data-locale="fr"
+                        data-primary-color="#ffcc00"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Infos complémentaires */}
-        <div className="max-w-4xl mx-auto mt-12 grid sm:grid-cols-3 gap-6">
-          <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Download className="w-8 h-8 text-red-400 mx-auto mb-3" />
-            <h4 className="text-white font-semibold mb-2">Livraison immédiate</h4>
-            <p className="text-gray-400 text-sm">Accès aux fichiers dès l'achat confirmé</p>
+        {!loading && !error && products.length > 0 && (
+          <div className="max-w-4xl mx-auto mt-12 grid sm:grid-cols-3 gap-6">
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
+              <Download className="w-8 h-8 text-red-400 mx-auto mb-3" />
+              <h4 className="text-white font-semibold mb-2">Livraison immédiate</h4>
+              <p className="text-gray-400 text-sm">Accès aux fichiers dès l'achat confirmé</p>
+            </div>
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
+              <Shield className="w-8 h-8 text-red-400 mx-auto mb-3" />
+              <h4 className="text-white font-semibold mb-2">Paiement sécurisé</h4>
+              <p className="text-gray-400 text-sm">Transaction via Charriow, données protégées</p>
+            </div>
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
+              <BookOpen className="w-8 h-8 text-red-400 mx-auto mb-3" />
+              <h4 className="text-white font-semibold mb-2">Support inclus</h4>
+              <p className="text-gray-400 text-sm">Assistance par email</p>
+            </div>
           </div>
-          <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Shield className="w-8 h-8 text-red-400 mx-auto mb-3" />
-            <h4 className="text-white font-semibold mb-2">Paiement sécurisé</h4>
-            <p className="text-gray-400 text-sm">Transaction via Charriow, données protégées</p>
-          </div>
-          <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
-            <BookOpen className="w-8 h-8 text-red-400 mx-auto mb-3" />
-            <h4 className="text-white font-semibold mb-2">Support inclus</h4>
-            <p className="text-gray-400 text-sm">Assistance par email pour toute question</p>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
