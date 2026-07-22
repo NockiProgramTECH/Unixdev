@@ -121,10 +121,10 @@ export default function Boutique() {
                   id="chariow-widget"
                   data-product-id={product.id}
                   data-store-domain="camfbzgd.mychariow.co"
-                  data-style="tap"
+                  data-style="button"
                   data-border-style="rounded"
                   data-cta-width="xs"
-                  data-background-color="#FFFFFF"
+                  data-background-color="#ffcc00"
                   data-cta-animation="shine"
                   data-locale="fr"
                   data-primary-color="#ffcc00"
